@@ -28,6 +28,8 @@
 
 using System;
 using System.Collections;
+using System.Data.SqlTypes;
+using System.IO;
 using System.Xml;
 using System.Xml.Linq;
 
@@ -41,7 +43,6 @@ namespace MARC
 		//Member Variables and Properties
 		#region Member Variables and Properties
 
-		private string filename = null;
         private readonly XmlReader reader = null;
 
 		#endregion
@@ -49,22 +50,27 @@ namespace MARC
 		//Constructors
 		#region Constructors
 
-		public FileMARCXMLReader(string filename)
+		public FileMARCXMLReader(System.IO.FileInfo file)
 		{
-			this.filename = filename;
-            reader = XmlReader.Create(filename);
+            reader = XmlReader.Create(file.FullName);
 		}
 
-		#endregion
+        public FileMARCXMLReader(string fileContent)
+        {
+            StringReader stringReader = new StringReader(fileContent);
+            reader = XmlReader.Create(stringReader);
+        }
 
-		//Interface functions
-		#region IEnumerator Members
+        #endregion
 
-		/// <summary>
-		/// Gets the enumerator.
-		/// </summary>
-		/// <returns></returns>
-		public IEnumerator GetEnumerator()
+        //Interface functions
+        #region IEnumerator Members
+
+        /// <summary>
+        /// Gets the enumerator.
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerator GetEnumerator()
 		{
 			while (!reader.EOF)
 			{

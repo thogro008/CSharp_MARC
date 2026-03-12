@@ -192,12 +192,14 @@ namespace MARC
 		private Record decode(int index)
 		{
 			XElement record = rawSource[index];
-		    Record marcXML = new Record {Leader = record.Elements().First(e => e.Name.LocalName == "leader").Value};
 
-		    //First we get the leader
+			record = record.Elements().First(e => e.Name.LocalName == "recordData").Elements().First(e => e.Name.LocalName == "record");
 
-		    //Now we get the control fields
-			foreach (XElement controlField in record.Elements().Where(e => e.Name.LocalName == "controlfield"))
+            //First we get the leader
+            Record marcXML = new Record { Leader = record.Elements().First(e => e.Name.LocalName == "leader").Value };
+
+            //Now we get the control fields
+            foreach (XElement controlField in record.Elements().Where(e => e.Name.LocalName == "controlfield"))
 			{
 				ControlField newField = new ControlField(controlField.Attribute("tag").Value, controlField.Value);
 				marcXML.Fields.Add(newField);
